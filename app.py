@@ -25,7 +25,7 @@ def index():
 def create_todo():
 	error = False
 	try:
-		description = request.get_jason()['description']
+		description = request.get_json()['description']
 		todo = Todo(description=description)
 		db.session.add(todo)
 		db.session.commit()
