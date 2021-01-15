@@ -40,7 +40,7 @@ def create_todo():
 
 @app.route('/todos/<todo_id>/set-completed', methods=['POST'])
 def set_completed_todo(todo_id):
-  completed = request.get_json()
+  completed = request.get_json()['completed']
   print("---------------------------")
   print(completed)
   print("---------------------------")
