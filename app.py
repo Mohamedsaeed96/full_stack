@@ -1,6 +1,7 @@
-from flask import Flask, render_template,request,url_for,redirect,jsonify
+from flask import Flask, render_template, request, url_for, redirect,jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+import sys
 app = Flask(__name__)
 db = SQLAlchemy(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123qwe@localhost:5432/todoapp'
@@ -25,8 +26,8 @@ def index():
 def create_todo():
   error = False
   try:
-    description = request.form.get('description','')
-    todo = Todo(description=description)
+    description = request.get_json()['description']
+    todo = Todo(description = description)
     db.session.add(todo)
     db.session.commit()
   except:
@@ -36,15 +37,29 @@ def create_todo():
   finally:
     db.session.close()
   if not error:
-    return redirect(url_for('index'))
+    return jsonify({
+      'description':todo.description
+    })
+
 
 @app.route('/todos/<todo_id>/set-completed', methods=['POST'])
 def set_completed_todo(todo_id):
-  completed = request.get_json()['completed']
-  print("---------------------------")
-  print(completed)
-  print("---------------------------")
-  todo = Todo.query.get(todo_id)
-  todo.completed = completed
-  db.session.commit()
+  # try:
+  #   comleted = request.get_json()['completed']
+  #   todo = Todo.query.get(todo_id)
+  #   todo.completed = completed
+  #   db.session.commit()
+  # except:
+  #   db.session.rollback()
+  # finally:
+  #   return redirect(url_for('index'))
+  try:
+    completed = request.get_json()['completed']
+    todo = Todo.query.get(todo_id)
+    todo.completed = completed
+    db.session.commit()
+  except:
+    db.session.rollback()
+  finally:
+    db,session.close()
   return redirect(url_for('index'))
