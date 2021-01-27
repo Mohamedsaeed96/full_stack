@@ -9,7 +9,7 @@
           list-style: none;
           padding: 0;
           margin: 0;
-          width: 300px;
+          width: 200px;
       }
       li{
       	clear: both;
@@ -23,41 +23,21 @@
       	cursor: pointer;
       	font-size: 20px;
       }
-      .lists-wrapper,.todos-wrapper{
-      	display: inline-block;
-      	vertical-align: top;
-      }
     </style>
   </head>
   <body>
-  	<div class="lists-wrapper">
-  		<ul id="lists">
-  			{% for list in lists %}
-  			</li>
-  				<a href="/lists/{{list.id}}">
-  					{{ list.name }}
-  				</a>
-  			</li>
-      		{% endfor %}
-  		</ul>
-  	</div>
-
-  	<div class="todos-wrapper">
-  		<h4>{{active_list.name}}</h4>
-	    <form id="form" method="post" action="/todos/create">
-	      <input type="text" id="description" name="description" />
-	      <input type="submit" value="Create" />
-	    </form>
-	    <div id="error" class="hidden">Something went wrong!</div>
-	    <ul id="todos">
-	      {% for d in data %}
-	      <li id = {{d.id}}>
-	      	<input class="check-completed" data-id="{{d.id}}" type="checkbox" {% if d.completed %} checked {% endif %} /> {{ d.description }} <button class="delete-button" data-id="{{d.id }}">&cross;</button>
-	      </li>
-	      {% endfor %}
-	    </ul>
-  	</div>
-
+    <form id="form" method="post" action="/todos/create">
+      <input type="text" id="description" name="description" />
+      <input type="submit" value="Create" />
+    </form>
+    <div id="error" class="hidden">Something went wrong!</div>
+    <ul id="todos">
+      {% for d in data %}
+      <li id = {{d.id}}>
+      	<input class="check-completed" data-id="{{d.id}}" type="checkbox" {% if d.completed %} checked {% endif %} /> {{ d.description }} <button class="delete-button" data-id="{{d.id }}">&cross;</button>
+      </li>
+      {% endfor %}
+    </ul>
     <script>
       //Update
       const checkboxes =document.querySelectorAll('.check-completed');
@@ -88,7 +68,6 @@
       const descInput = document.getElementById('description');
       document.getElementById('form').onsubmit = function(e) {
         e.preventDefault();
-        console.log(e);
         const desc = descInput.value;
         descInput.value = '';
         fetch('/todos/create', {
